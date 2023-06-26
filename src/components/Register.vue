@@ -1,35 +1,102 @@
 <script setup>
-//Aqui van los imports
+//IMPORTS
+import { ref, computed } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+//ENDPOINT
+const endpoint = 'http://localhost:3001/adduser';
 
+//USER-STATE
+const user = ref({
+    name: '',
+    phone: '',
+    email: '',
+    password: '',
+});
+
+//USER-ERROR-STATE
+const userError = ref({
+    nameError: '',
+    phoneError: '',
+    emailError: '',
+    passwordError: '',
+    registerError: '',
+});
+
+//ROUTER
+const router = useRouter();
+
+//VALIDATION OF FORM(En script, hay que obtener el valor de la propiedad para que funcione)
+const isFormInvalid = computed(() => {
+    return (
+        !user.value.name ||
+        !user.value.phone ||
+        !user.value.email ||
+        !user.value.password
+    );
+});
+
+//REGISTER-FUNCTION
+const registerUser = async () => {
+    try {
+        const response = await axios.post(endpoint, {
+            name: user.value.name,
+            phone: user.value.phone,
+            email: user.value.email,
+            password: user.value.password,
+        });
+
+        if (response.data.result === 'success') {
+            router.push('/login');
+        } else {
+            userError.value.registerError = 'Registro fallido, revise todos los campos';
+            document.getElementById('regerror').textContent = userError.value.registerError;
+        }
+    } catch (error) {
+        console.error('Registro fallido', error);
+
+        userError.value.registerError = 'Registro fallido, revise todos los campos';
+        document.getElementById('regerror').textContent = userError.value.registerError;
+    }
+};
+
+//SEE PASSWORD / NO SEE PASSWORD
+const togglePassword = () => {
+    setPasswordShown(!passwordShown);
+};
 </script>
 
 <template>
-    <div class="form-div">
+   <form @submit.prevent="registerUser" class="form-div">
         <h2>BIENVENID@ </h2>
         <!-- NAME -->
         <div class="form-div">
-            <input type="text" class="" placeholder="Nombre" required>
-            <div class="error-message">{{ }}</div>
+            <input v-model.trim="user.name" type="text" class="form-control" placeholder="Nombre" required>
+            <div class="error-message">{{ userError.nameError }}</div>
         </div>
         <!-- PHONE -->
         <div class="form-div">
-            <input type="text" class="" placeholder="Teléfono" required>
-            <div class="error-message">{{ }}</div>
+            <input v-model.trim="user.phone" type="text" class="form-control" placeholder="Teléfono" required>
+            <div class="error-message">{{ userError.phoneError }}</div>
         </div>
         <!-- EMAIL -->
         <div class="form-div">
-            <input type="email" class="form-control" placeholder="Email" required>
-            <div class="error-message">{{ }}</div>
+            <input v-model.trim="user.email" type="email" class="form-control" placeholder="Email" required>
+            <div class="error-message">{{ userError.emailError }}</div>
         </div>
         <!-- PASSWORD -->
         <div class="form-div">
-            <input :type="passwordShown ? 'text' : 'password'" class="form-control" placeholder="Contraseña" required>
-            <div class="error-message">{{ }}</div>
+            <input v-model.trim="user.password" :type="passwordShown ? 'text' : 'password'" class="form-control"
+                placeholder="Contraseña" required>
+            <div class="error-message">{{ userError.passwordError }}</div>
+            <span @click="togglePassword" class="">
+                <i :class="passwordShown ? 'see-password' : 'no-see-password'"></i>
+            </span>
         </div>
         <!-- BUTTON-REGISTER -->
-        <button class="btn btn-primary">Registrarme</button>
-        <div id="regerror" class="error-message">{{ }}</div>
-    </div>
+        <button :disabled="isFormInvalid" class="">Registrarme</button>
+        <div id="regerror" class="error-message">{{ userError.registerError }}</div>
+    </form>
 </template>
 
 <style scoped>
@@ -40,8 +107,14 @@
     align-items: center;
     margin-top: 1em;
 }
+
 button {
     margin-top: 1em;
+}
+
+.error-message {
+    color: red;
+    font-size: small;
 }
 </style>
 
