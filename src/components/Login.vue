@@ -5,6 +5,8 @@
     <template>
     
     <h2>LOGIN</h2>
+    <p>javi</p>
+    <p>moya</p>
     </template>
 
 

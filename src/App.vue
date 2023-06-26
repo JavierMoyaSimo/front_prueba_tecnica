@@ -31,8 +31,8 @@ const currentView = computed(() => {
   <div class="container-app">
     <div class="navigate">
      <a href="#/">Home</a> 
-  <a href="#/Login">Login</a>
-  <a href="#/Register">Register</a>
+  <a href="#/login">Login</a>
+  <a href="#/register">Register</a>
   </div>
   <div>
     <component :is="currentView" />
