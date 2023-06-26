@@ -46,8 +46,14 @@ const registerUser = async () => {
             password: user.value.password,
         });
 
-        if (response.data.result === 'success') {
-            router.push('/login');
+        if (response.data.result === 'SUCCESS') {
+            userError.value.registerError = 'REGISTRADO CON ÉXITO';
+            document.getElementById('regerror').textContent = userError.value.registerError;
+            setTimeout(() => {
+                router.push('/login');
+
+            }, 1000);
+
         } else {
             userError.value.registerError = 'Registro fallido, revise todos los campos';
             document.getElementById('regerror').textContent = userError.value.registerError;
@@ -60,14 +66,21 @@ const registerUser = async () => {
     }
 };
 
-//SEE PASSWORD / NO SEE PASSWORD
+// SEE PASSWORD / NO SEE PASSWORD
+const passwordShown = ref(false);
 const togglePassword = () => {
-    setPasswordShown(!passwordShown);
+    passwordShown.value = !passwordShown.value;
 };
+
+//REGISTER-SUCCESSFUL
+const registerCorrectly = ref(false);
+
+
+
 </script>
 
 <template>
-   <form @submit.prevent="registerUser" class="form-div">
+    <form @submit.prevent="registerUser" class="form-div">
         <h2>BIENVENID@ </h2>
         <!-- NAME -->
         <div class="form-div">
@@ -95,7 +108,8 @@ const togglePassword = () => {
         </div>
         <!-- BUTTON-REGISTER -->
         <button :disabled="isFormInvalid" class="">Registrarme</button>
-        <div id="regerror" class="error-message">{{ userError.registerError }}</div>
+        <div id="regerror" :class="registerCorrectly ? 'successful-message' : 'error-message'">{{ userError.registerError }}
+        </div>
     </form>
 </template>
 
@@ -114,6 +128,11 @@ button {
 
 .error-message {
     color: red;
+    font-size: small;
+}
+
+.successful-message {
+    color: green;
     font-size: small;
 }
 </style>
