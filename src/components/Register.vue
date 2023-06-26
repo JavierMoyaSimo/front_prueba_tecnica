@@ -82,7 +82,7 @@ let registerCorrectly = ref(false);
 
 <template>
     <form @submit.prevent="registerUser" class="form-div">
-        <h2>BIENVENID@ </h2>
+        <h2>INSCRÍBETE </h2>
         <!-- NAME -->
         <div class="form-div">
             <input v-model.trim="user.name" type="text" class="form-control" placeholder="Nombre" required>
