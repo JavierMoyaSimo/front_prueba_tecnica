@@ -47,6 +47,7 @@ const registerUser = async () => {
         });
 
         if (response.data.result === 'SUCCESS') {
+            registerCorrectly.value = !registerCorrectly.value
             userError.value.registerError = 'REGISTRADO CON ÉXITO';
             document.getElementById('regerror').textContent = userError.value.registerError;
             setTimeout(() => {
@@ -73,7 +74,7 @@ const togglePassword = () => {
 };
 
 //REGISTER-SUCCESSFUL
-const registerCorrectly = ref(false);
+let registerCorrectly = ref(false);
 
 
 
