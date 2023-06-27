@@ -1,8 +1,21 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const user = ref(null);
 const dataToUpdate = ref(null);
+
+//USER-ERROR-STATE
+const userError = ref({
+    emailError: '',
+    phoneError: '',
+    passwordError: '',
+    updateError: '',
+});
+
+//ENDPOINT
+const endpoint = 'http://localhost:3001/modifyuser/';
 
 onMounted(() => {
     const userData = localStorage.getItem('user');
@@ -16,6 +29,9 @@ onMounted(() => {
     }
 })
 
+//ROUTER
+const router = useRouter();
+
 // VALIDATION OF FORM
 const isFormInvalid = computed(() => {
     return (
@@ -27,12 +43,47 @@ const isFormInvalid = computed(() => {
     );
 });
 
+//UPDATE-USER-FUNCTION
+const updateUser = async () => {
+    try {
+        console.log("DATOS RECIBIDOS", dataToUpdate)
+        const response = await axios.patch(endpoint + user.value.email, {
+            name: dataToUpdate.value.name,
+            phone: dataToUpdate.value.phone,
+            password: dataToUpdate.value.password,
+        }, {
+            headers: { Authorization: `Bearer ${user.value.jwt}` },
+        });
+        console.log("EEEEEEEEEEESTOOOOOO", response.data.message)
+        if (response.data.message === "User not found") {
+            userError.value.updateError = 'Error en la actualización, revisa los campos';
+            document.getElementById('updateError').textContent = userError.value.updateError;
+            return;
+        }
+        console.log("RESPUPDATE", response);
+        updateCorrectly.value = !updateCorrectly.value
+        userError.value.updateError = 'ACTUALIZADO CON ÉXITO';
+        document.getElementById('updateError').textContent = userError.value.updateError;
+        setTimeout(() => {
+            localStorage.removeItem('user');
+            router.push('/login');
+        }, 1000);
+
+    } catch (error) {
+        console.error('Actualización fallida', error);
+        userError.value.updateError = 'Error en la actualización';
+        document.getElementById('updateError').textContent = userError.value.updateError;
+    }
+}
+
+//UPDATE-SUCCESSFUL
+let updateCorrectly = ref(false);
 </script>
 
 <template>
     <div class="userView-div">
         <!-- Rol user -->
-        <div v-if="user && user.rol === 'user'" >
+        <div v-if="user && user.rol === 'user'">
             <h2>Bienvenido, {{ user && user.name }}!</h2>
             <div class="row-div">
                 <p class="label">Nombre:</p>
@@ -47,29 +98,30 @@ const isFormInvalid = computed(() => {
                 <p>{{ user && user.phone }}</p>
             </div>
 
-            <form @submit.prevent="" class="userView-div">
+            <form @submit.prevent="updateUser" class="userView-div">
                 <h2>ACTUALIZAR DATOS </h2>
                 <!-- NAME -->
                 <div class="userView-div">
                     <input v-model.trim="dataToUpdate.name" type="text" class="form-control"
                         :placeholder="user && user.name" required>
-                    <!-- <div class="error-message">{{ userError.emailError }}</div> -->
+                    <div class="error-message">{{ userError.emailError }}</div>
                 </div>
                 <!-- PHONE -->
                 <div class="userView-div">
                     <input v-model.trim="dataToUpdate.phone" type="text" class="form-control"
                         :placeholder="user && user.phone" required>
-                    <!-- <div class="error-message">{{ userError.phoneError }}</div> -->
+                    <div class="error-message">{{ userError.phoneError }}</div>
                 </div>
                 <!-- PASSWORD -->
                 <div class="userView-div">
                     <input v-model.trim="dataToUpdate.password" type='password' class="form-control"
                         placeholder="Contraseña" required>
-                    <!-- <div class="error-message">{{ userError.passwordError }}</div> -->
+                    <div class="error-message">{{ userError.passwordError }}</div>
                 </div>
-                <!-- BUTTON-REGISTER -->
+                <!-- BUTTON-UPDATE-USER -->
                 <button :disabled="isFormInvalid" class="">Actualizar datos</button>
-                <!-- <div id="loginerror" :class="loginCorrectly ? 'successful-message' : 'error-message'">{{ userError.loginError }}</div> -->
+                <div id="updateError" :class="updateCorrectly ? 'successful-message' : 'error-message'">{{
+                    userError.updateError }}</div>
             </form>
 
         </div>
@@ -105,5 +157,15 @@ h2 {
 
 button {
     margin-top: 1em;
+}
+
+.error-message {
+    color: red;
+    font-size: small;
+}
+
+.successful-message {
+    color: green;
+    font-size: small;
 }
 </style>
