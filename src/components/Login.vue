@@ -39,6 +39,8 @@ const loginUser = async () => {
     });
     console.log(response);
     if (response.data.result === 'SUCCESS') {
+      // Guardar la información del usuario en localStorage
+      localStorage.setItem('user', JSON.stringify(response.data.user))
       console.log("ESTE ES EL DATO A TRATAR",response.data.user)
       loginCorrectly.value = !loginCorrectly.value
       userError.value.loginError = 'CONECTADO CON ÉXITO';
