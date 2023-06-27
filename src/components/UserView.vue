@@ -79,7 +79,7 @@ const deleteUser = async (email) => {
 
         }, 501);
 
-        
+
 
     } catch (error) {
         console.error('Error deleting user', error);
@@ -141,8 +141,7 @@ let updateCorrectly = ref(false);
 </script>
 
 <template>
-    <!-- Rol user -->
-    <div v-if="user && user.rol === 'user'" class="userView-div">
+    <div v-if="user" class="userView-div">
         <h2>Bienvenido, {{ user && user.name }}!</h2>
         <div class="row-div">
             <p class="label">Nombre:</p>
@@ -187,45 +186,6 @@ let updateCorrectly = ref(false);
 
     <!-- Rol admin -->
     <div v-if="user && user.rol === 'admin'" class="userView-div">
-        <h2>Bienvenido, Administrador!</h2>
-        <div class="row-div">
-            <p class="label">Nombre:</p>
-            <p>{{ user && user.name }}</p>
-        </div>
-        <div class="row-div">
-            <p class="label">Email:</p>
-            <p>{{ user && user.email }}</p>
-        </div>
-        <div class="row-div">
-            <p class="label">Teléfono:</p>
-            <p>{{ user && user.phone }}</p>
-        </div>
-
-        <form @submit.prevent="updateUser" class="userView-div">
-            <h2>ACTUALIZAR DATOS </h2>
-            <!-- NAME -->
-            <div class="userView-div">
-                <input v-model.trim="dataToUpdate.name" type="text" class="form-control" :placeholder="user && user.name"
-                    required>
-                <div class="error-message">{{ userError.emailError }}</div>
-            </div>
-            <!-- PHONE -->
-            <div class="userView-div">
-                <input v-model.trim="dataToUpdate.phone" type="text" class="form-control" :placeholder="user && user.phone"
-                    required>
-                <div class="error-message">{{ userError.phoneError }}</div>
-            </div>
-            <!-- PASSWORD -->
-            <div class="userView-div">
-                <input v-model.trim="dataToUpdate.password" type='password' class="form-control" placeholder="Contraseña"
-                    required>
-                <div class="error-message">{{ userError.passwordError }}</div>
-            </div>
-            <!-- BUTTON-UPDATE-USER -->
-            <button :disabled="isFormInvalid" class="">Actualizar datos</button>
-            <div id="updateError" :class="updateCorrectly ? 'successful-message' : 'error-message'">{{
-                userError.updateError }}</div>
-        </form>
         <h2>LISTA DE USUARIOS </h2>
         <div v-if="user && user.rol === 'admin'" class="userView-div">
 
