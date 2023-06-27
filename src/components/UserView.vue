@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
 const user = ref(null);
+const dataToUpdate = ref(null);
 
 onMounted(() => {
     const userData = localStorage.getItem('user');
@@ -9,27 +10,29 @@ onMounted(() => {
     if (userData) {
         user.value = JSON.parse(userData);
         console.log("Este es el user", user.value);
+        dataToUpdate.value = { ...user.value };
+        console.log("ESTO ES DATATOUPDATE", dataToUpdate);
+        console.log("GUENO", dataToUpdate.value.phone)
     }
 })
 
-let dataToUpdate = ref(user.value)
-console.log("ESTO ES DATATOUPDATE", dataToUpdate);
-
-//VALIDATION OF FORM(En script, hay que obtener el valor de la propiedad para que funcione)
-// const isFormInvalid = computed(() => {
-//     return (
-//         !dataToUpdate.value.email ||
-//         !dataToUpdate.value.password ||
-//         !dataToUpdate.value.phone
-//     );
-// });
+// VALIDATION OF FORM
+const isFormInvalid = computed(() => {
+    return (
+        !dataToUpdate.value ||
+        !dataToUpdate.value.name ||
+        !dataToUpdate.value.email ||
+        !dataToUpdate.value.password ||
+        !dataToUpdate.value.phone
+    );
+});
 
 </script>
 
 <template>
     <div class="userView-div">
         <!-- Rol user -->
-        <div v-if="user && user.rol === 'user'">
+        <div v-if="user && user.rol === 'user'" >
             <h2>Bienvenido, {{ user && user.name }}!</h2>
             <div class="row-div">
                 <p class="label">Nombre:</p>
@@ -48,28 +51,25 @@ console.log("ESTO ES DATATOUPDATE", dataToUpdate);
                 <h2>ACTUALIZAR DATOS </h2>
                 <!-- NAME -->
                 <div class="userView-div">
-                    <input :v-model.trim="dataToUpdate && dataToUpdate.name" type="text" class="form-control"
+                    <input v-model.trim="dataToUpdate.name" type="text" class="form-control"
                         :placeholder="user && user.name" required>
                     <!-- <div class="error-message">{{ userError.emailError }}</div> -->
                 </div>
                 <!-- PHONE -->
                 <div class="userView-div">
-                    <input :v-model.trim="dataToUpdate && dataToUpdate.phone" type="text" class="form-control"
-                    :placeholder="user && user.phone" required>
+                    <input v-model.trim="dataToUpdate.phone" type="text" class="form-control"
+                        :placeholder="user && user.phone" required>
                     <!-- <div class="error-message">{{ userError.phoneError }}</div> -->
                 </div>
                 <!-- PASSWORD -->
                 <div class="userView-div">
-                    <input :v-model.trim="dataToUpdate && dataToUpdate.password" type='password' class="form-control"
+                    <input v-model.trim="dataToUpdate.password" type='password' class="form-control"
                         placeholder="Contraseña" required>
                     <!-- <div class="error-message">{{ userError.passwordError }}</div> -->
-
                 </div>
                 <!-- BUTTON-REGISTER -->
                 <button :disabled="isFormInvalid" class="">Actualizar datos</button>
-                <!-- <div id="loginerror" :class="loginCorrectly ? 'successful-message' : 'error-message'">{{
-                    userError.loginError }}
-                </div> -->
+                <!-- <div id="loginerror" :class="loginCorrectly ? 'successful-message' : 'error-message'">{{ userError.loginError }}</div> -->
             </form>
 
         </div>
