@@ -19,13 +19,11 @@ const endpoint = 'http://localhost:3001/modifyuser/';
 
 onMounted(() => {
     const userData = localStorage.getItem('user');
-    console.log("ESTO ES USERDATA DEL LOCALSTORAGE", userData)
     if (userData) {
         user.value = JSON.parse(userData);
-        console.log("Este es el user", user.value);
+
         dataToUpdate.value = { ...user.value };
-        console.log("ESTO ES DATATOUPDATE", dataToUpdate);
-        console.log("GUENO", dataToUpdate.value.phone)
+
     }
 })
 
@@ -46,7 +44,7 @@ const isFormInvalid = computed(() => {
 //UPDATE-USER-FUNCTION
 const updateUser = async () => {
     try {
-        console.log("DATOS RECIBIDOS", dataToUpdate)
+
         const response = await axios.patch(endpoint + user.value.email, {
             name: dataToUpdate.value.name,
             phone: dataToUpdate.value.phone,
@@ -54,13 +52,13 @@ const updateUser = async () => {
         }, {
             headers: { Authorization: `Bearer ${user.value.jwt}` },
         });
-        console.log("EEEEEEEEEEESTOOOOOO", response.data.message)
+
         if (response.data.message === "User not found") {
             userError.value.updateError = 'Error en la actualización, revisa los campos';
             document.getElementById('updateError').textContent = userError.value.updateError;
             return;
         }
-        console.log("RESPUPDATE", response);
+
         updateCorrectly.value = !updateCorrectly.value
         userError.value.updateError = 'ACTUALIZADO CON ÉXITO';
         document.getElementById('updateError').textContent = userError.value.updateError;
