@@ -68,10 +68,10 @@ const registerUser = async () => {
 };
 
 // SEE PASSWORD / NO SEE PASSWORD
-const passwordShown = ref(false);
-const togglePassword = () => {
-    passwordShown.value = !passwordShown.value;
-};
+// const passwordShown = ref(false);
+// const togglePassword = () => {
+//     passwordShown.value = !passwordShown.value;
+// };
 
 //REGISTER-SUCCESSFUL
 let registerCorrectly = ref(false);
@@ -100,12 +100,11 @@ let registerCorrectly = ref(false);
         </div>
         <!-- PASSWORD -->
         <div class="form-div">
-            <input v-model.trim="user.password" :type="passwordShown ? 'text' : 'password'" class="form-control"
-                placeholder="Contraseña" required>
+            <input v-model.trim="user.password" type='password' class="form-control" placeholder="Contraseña" required>
             <div class="error-message">{{ userError.passwordError }}</div>
-            <span @click="togglePassword" class="">
+            <!-- <span @click="togglePassword" class="">
                 <i :class="passwordShown ? 'see-password' : 'no-see-password'"></i>
-            </span>
+            </span> -->
         </div>
         <!-- BUTTON-REGISTER -->
         <button :disabled="isFormInvalid" class="">Registrarme</button>

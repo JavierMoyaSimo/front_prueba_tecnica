@@ -83,7 +83,7 @@ let loginCorrectly = ref(false);
     </div>
     <!-- PASSWORD -->
     <div class="form-div">
-      <input v-model.trim="user.password" :type="passwordShown ? 'text' : 'password'" class="form-control"
+      <input v-model.trim="user.password" type= 'password' class="form-control"
         placeholder="Contraseña" required>
       <div class="error-message">{{ userError.passwordError }}</div>
       <!-- <span @click="togglePassword" class="">
