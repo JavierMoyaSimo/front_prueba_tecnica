@@ -70,14 +70,22 @@ const deleteUser = async (email) => {
         isDeleted.value[email] = "Usuario eliminado";
 
         setTimeout(() => {
+            router.push('/login');
+
+        }, 500);
+
+        setTimeout(() => {
             router.push('/userView');
 
-        }, 1000);
+        }, 501);
+
+        
 
     } catch (error) {
         console.error('Error deleting user', error);
     }
 }
+
 const isDeleted = ref({});
 const deletedUserEmail = ref(null);
 
