@@ -124,6 +124,7 @@ let registerCorrectly = ref(false);
 
 button {
     margin-top: 1em;
+    margin-bottom: 1em;
 }
 
 .error-message {
