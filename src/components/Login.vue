@@ -37,11 +37,10 @@ const loginUser = async () => {
       email: user.value.email,
       password: user.value.password,
     });
-    console.log(response);
+
     if (response.data.result === 'SUCCESS') {
       // Guardar la información del usuario en localStorage
       localStorage.setItem('user', JSON.stringify(response.data.user))
-      console.log("ESTE ES EL DATO A TRATAR",response.data.user)
       loginCorrectly.value = !loginCorrectly.value
       userError.value.loginError = 'CONECTADO CON ÉXITO';
       document.getElementById('loginerror').textContent = userError.value.loginError;
@@ -62,11 +61,6 @@ const loginUser = async () => {
   }
 };
 
-// SEE PASSWORD / NO SEE PASSWORD
-// const passwordShown = ref(false);
-// const togglePassword = () => {
-//   passwordShown.value = !passwordShown.value;
-// };
 
 //LOGIN-SUCCESSFUL
 let loginCorrectly = ref(false);
@@ -74,31 +68,44 @@ let loginCorrectly = ref(false);
 </script>
 
 <template>
-  <form @submit.prevent="loginUser" class="form-div">
-    <h2>INICIAR SESIÓN </h2>
-    <!-- EMAIL -->
-    <div class="form-div">
-      <input v-model.trim="user.email" type="email" class="form-control" placeholder="Email" required>
-      <div class="error-message">{{ userError.emailError }}</div>
-    </div>
-    <!-- PASSWORD -->
-    <div class="form-div">
-      <input v-model.trim="user.password" type= 'password' class="form-control"
-        placeholder="Contraseña" required>
-      <div class="error-message">{{ userError.passwordError }}</div>
-      <!-- <span @click="togglePassword" class="">
-        <i :class="passwordShown ? 'see-password' : 'no-see-password'"></i>
-      </span> -->
-    </div>
-    <!-- BUTTON-REGISTER -->
-    <button :disabled="isFormInvalid" class="">Conectarse</button>
-    <div id="loginerror" :class="loginCorrectly ? 'successful-message' : 'error-message'">{{ userError.loginError }}
-    </div>
-  </form>
+  <div class="main-div">
+    <form @submit.prevent="loginUser" class="form-div border">
+      <h2>INICIAR SESIÓN </h2>
+      <!-- EMAIL -->
+      <div class="form-div">
+        <input v-model.trim="user.email" type="email" class="form-control" placeholder="Email" required>
+        <div class="error-message">{{ userError.emailError }}</div>
+      </div>
+      <!-- PASSWORD -->
+      <div class="form-div">
+        <input v-model.trim="user.password" type='password' class="form-control" placeholder="Contraseña" required>
+        <div class="error-message">{{ userError.passwordError }}</div>
+      </div>
+      <!-- BUTTON-REGISTER -->
+      <button :disabled="isFormInvalid" class="">Conectarse</button>
+      <div id="loginerror" :class="loginCorrectly ? 'successful-message' : 'error-message'">{{ userError.loginError }}
+      </div>
+    </form>
+  </div>
 </template>
 
 
 <style scoped>
+.main-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+}
+
+.border {
+  border-radius: 10px;
+  border: 1px solid gray;
+  padding: 1em;
+  background-color: rgba(37, 132, 167, 0.575);
+}
+
 .form-div {
   display: flex;
   flex-direction: column;

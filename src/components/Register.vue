@@ -3,6 +3,7 @@
 import { ref, computed } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+
 //ENDPOINT
 const endpoint = 'http://localhost:3001/adduser';
 
@@ -67,13 +68,9 @@ const registerUser = async () => {
     }
 };
 
-// SEE PASSWORD / NO SEE PASSWORD
-// const passwordShown = ref(false);
-// const togglePassword = () => {
-//     passwordShown.value = !passwordShown.value;
-// };
 
-//REGISTER-SUCCESSFUL
+
+//REGISTER-SUCCESSFUL-CLASS-CONTROL(Green or red)
 let registerCorrectly = ref(false);
 
 
@@ -81,39 +78,54 @@ let registerCorrectly = ref(false);
 </script>
 
 <template>
-    <form @submit.prevent="registerUser" class="form-div">
-        <h2>INSCRÍBETE </h2>
-        <!-- NAME -->
-        <div class="form-div">
-            <input v-model.trim="user.name" type="text" class="form-control" placeholder="Nombre" required>
-            <div class="error-message">{{ userError.nameError }}</div>
-        </div>
-        <!-- PHONE -->
-        <div class="form-div">
-            <input v-model.trim="user.phone" type="text" class="form-control" placeholder="Teléfono" required>
-            <div class="error-message">{{ userError.phoneError }}</div>
-        </div>
-        <!-- EMAIL -->
-        <div class="form-div">
-            <input v-model.trim="user.email" type="email" class="form-control" placeholder="Email" required>
-            <div class="error-message">{{ userError.emailError }}</div>
-        </div>
-        <!-- PASSWORD -->
-        <div class="form-div">
-            <input v-model.trim="user.password" type='password' class="form-control" placeholder="Contraseña" required>
-            <div class="error-message">{{ userError.passwordError }}</div>
-            <!-- <span @click="togglePassword" class="">
-                <i :class="passwordShown ? 'see-password' : 'no-see-password'"></i>
-            </span> -->
-        </div>
-        <!-- BUTTON-REGISTER -->
-        <button :disabled="isFormInvalid" class="">Registrarme</button>
-        <div id="regerror" :class="registerCorrectly ? 'successful-message' : 'error-message'">{{ userError.registerError }}
-        </div>
-    </form>
+    <div class="main-div">
+        <form @submit.prevent="registerUser" class="form-div border">
+            <h2>INSCRÍBETE </h2>
+            <!-- NAME -->
+            <div class="form-div">
+                <input v-model.trim="user.name" type="text" class="form-control" placeholder="Nombre" required>
+                <div class="error-message">{{ userError.nameError }}</div>
+            </div>
+            <!-- PHONE -->
+            <div class="form-div">
+                <input v-model.trim="user.phone" type="text" class="form-control" placeholder="Teléfono" required>
+                <div class="error-message">{{ userError.phoneError }}</div>
+            </div>
+            <!-- EMAIL -->
+            <div class="form-div">
+                <input v-model.trim="user.email" type="email" class="form-control" placeholder="Email" required>
+                <div class="error-message">{{ userError.emailError }}</div>
+            </div>
+            <!-- PASSWORD -->
+            <div class="form-div">
+                <input v-model.trim="user.password" type='password' class="form-control" placeholder="Contraseña" required>
+                <div class="error-message">{{ userError.passwordError }}</div>
+            </div>
+            <!-- BUTTON-REGISTER -->
+            <button :disabled="isFormInvalid" class="">Registrarme</button>
+            <div id="regerror" :class="registerCorrectly ? 'successful-message' : 'error-message'">{{
+                userError.registerError }}
+            </div>
+        </form>
+    </div>
 </template>
 
 <style scoped>
+.main-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+}
+
+.border {
+    border-radius: 10px;
+    border: 1px solid gray;
+    padding: 1em;
+    background-color: rgba(37, 132, 167, 0.575);
+}
+
 .form-div {
     display: flex;
     flex-direction: column;

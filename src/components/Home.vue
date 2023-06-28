@@ -1,7 +1,7 @@
 <script setup>
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 
-const route = useRoute();
+
 const router = useRouter();
 
 const goRegister = () => {
@@ -17,8 +17,15 @@ const goLogin = () => {
   <div class="home-div">
     <h1>HOME</h1>
     <div class="buttons-div">
-      <button @click="goRegister">REGISTER</button>
-      <button @click="goLogin">LOGIN</button>
+      <div class="register-login-div">
+        <p>Regístrate</p>
+        <button @click="goRegister">REGISTER</button>
+      </div>
+      <div class="register-login-div">
+        <p>Inicia sesión</p>
+        <button @click="goLogin">LOGIN</button>
+      </div>
+
     </div>
   </div>
 </template>
@@ -31,15 +38,29 @@ const goLogin = () => {
   flex-direction: column;
 }
 
-h1 {
-  color: green;
-}
-
 .buttons-div {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
   width: 100%;
+}
+
+.register-login-div {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 10px;
+  border: 1px solid gray;
+  background-color: rgba(37, 132, 167, 0.575);
+  padding: 1em;
+  width: 35%;
+}
+
+p {
+  font-weight: bold;
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 </style>
 

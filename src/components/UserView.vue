@@ -29,12 +29,9 @@ onMounted(() => {
     }
 
     if (user.value.rol === "admin") {
-        console.log("HOLA");
         getAllUsers()
             .then((response) => {
-                console.log(response);
                 allUsers.value = response;
-                console.log(allUsers);
             })
             .catch((error) => console.error(error));
     }
@@ -48,7 +45,6 @@ const getAllUsers = async () => {
         const response = await axios.get(getUsers, {
             headers: { Authorization: `Bearer ${user.value.jwt}` },
         });
-        console.log(response.data);
         return response.data;
 
     } catch (error) {
@@ -63,21 +59,23 @@ const deleteUser = async (email) => {
             headers: { Authorization: `Bearer ${user.value.jwt}` },
         });
 
-        // Handle the response as needed
-        console.log(response);
-
+        
         deletedUserEmail.value = email;
-        isDeleted.value[email] = "Usuario eliminado";
+        if (response.data.message === "User successfully deleted") {
 
-        setTimeout(() => {
-            router.push('/login');
+            isDeleted.value[email] = "Usuario eliminado";
 
-        }, 500);
+            setTimeout(() => {
+                router.push('/login');
 
-        setTimeout(() => {
-            router.push('/userView');
+            }, 500);
 
-        }, 501);
+            setTimeout(() => {
+                router.push('/userView');
+
+            }, 501);
+        }
+
 
 
 
@@ -142,52 +140,60 @@ let updateCorrectly = ref(false);
 
 <template>
     <div v-if="user" class="userView-div">
-        <h2>Bienvenido, {{ user && user.name }}!</h2>
-        <div class="row-div">
-            <p class="label">Nombre:</p>
-            <p>{{ user && user.name }}</p>
-        </div>
-        <div class="row-div">
-            <p class="label">Email:</p>
-            <p>{{ user && user.email }}</p>
-        </div>
-        <div class="row-div">
-            <p class="label">Teléfono:</p>
-            <p>{{ user && user.phone }}</p>
+
+        <div class="border">
+            <h2>Bienvenido, {{ user && user.name }}!</h2>
+            <div class="row-div">
+                <p class="label">Nombre:</p>
+                <p>{{ user && user.name }}</p>
+            </div>
+            <div class="row-div">
+                <p class="label">Email:</p>
+                <p>{{ user && user.email }}</p>
+            </div>
+            <div class="row-div">
+                <p class="label">Teléfono:</p>
+                <p>{{ user && user.phone }}</p>
+            </div>
         </div>
 
-        <form @submit.prevent="updateUser" class="userView-div">
-            <h2>ACTUALIZAR DATOS </h2>
-            <!-- NAME -->
-            <div class="userView-div">
-                <input v-model.trim="dataToUpdate.name" type="text" class="form-control" :placeholder="user && user.name"
-                    required>
-                <div class="error-message">{{ userError.emailError }}</div>
-            </div>
-            <!-- PHONE -->
-            <div class="userView-div">
-                <input v-model.trim="dataToUpdate.phone" type="text" class="form-control" :placeholder="user && user.phone"
-                    required>
-                <div class="error-message">{{ userError.phoneError }}</div>
-            </div>
-            <!-- PASSWORD -->
-            <div class="userView-div">
-                <input v-model.trim="dataToUpdate.password" type='password' class="form-control" placeholder="Contraseña"
-                    required>
-                <div class="error-message">{{ userError.passwordError }}</div>
-            </div>
-            <!-- BUTTON-UPDATE-USER -->
-            <button :disabled="isFormInvalid" class="">Actualizar datos</button>
-            <div id="updateError" :class="updateCorrectly ? 'successful-message' : 'error-message'">{{
-                userError.updateError }}</div>
-        </form>
+        <div class="border">
+            <form @submit.prevent="updateUser" class="userView-div">
+                <h2>ACTUALIZAR DATOS </h2>
+                <!-- NAME -->
+                <div class="userView-div">
+                    <input v-model.trim="dataToUpdate.name" type="text" class="form-control"
+                        :placeholder="user && user.name" required>
+                    <div class="error-message">{{ userError.emailError }}</div>
+                </div>
+                <!-- PHONE -->
+                <div class="userView-div">
+                    <input v-model.trim="dataToUpdate.phone" type="text" class="form-control"
+                        :placeholder="user && user.phone" required>
+                    <div class="error-message">{{ userError.phoneError }}</div>
+                </div>
+                <!-- PASSWORD -->
+                <div class="userView-div">
+                    <input v-model.trim="dataToUpdate.password" type='password' class="form-control"
+                        placeholder="Contraseña" required>
+                    <div class="error-message">{{ userError.passwordError }}</div>
+                </div>
+                <!-- BUTTON-UPDATE-USER -->
+                <button :disabled="isFormInvalid" class="">Actualizar datos</button>
+                <div id="updateError" :class="updateCorrectly ? 'successful-message' : 'error-message'">{{
+                    userError.updateError }}</div>
+            </form>
+        </div>
+
+
 
     </div>
 
     <!-- Rol admin -->
     <div v-if="user && user.rol === 'admin'" class="userView-div">
-        <h2>LISTA DE USUARIOS </h2>
-        <div v-if="user && user.rol === 'admin'" class="userView-div">
+        <div class="border">
+            <h2>LISTA DE USUARIOS </h2>
+            <!-- <div v-if="user && user.rol === 'admin'" class="userView-div"> -->
 
             <div v-if="allUsers">
                 <div v-for="user in allUsers" :key="user._id" class="user-item" v-if="user.email !== deletedUserEmail">
@@ -211,6 +217,8 @@ let updateCorrectly = ref(false);
             </div>
         </div>
 
+        <!-- </div> -->
+
     </div>
 </template>
 
@@ -223,6 +231,15 @@ let updateCorrectly = ref(false);
     margin-top: 1em;
 }
 
+.border {
+    border-radius: 10px;
+    border: 1px solid gray;
+    padding: 1em;
+    background-color: rgba(37, 132, 167, 0.575);
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
 .row-div {
     display: flex;
     justify-content: space-between;
@@ -230,12 +247,10 @@ let updateCorrectly = ref(false);
 
 .label {
     font-weight: bold;
+    font-family: Georgia, 'Times New Roman', Times, serif;
     margin-right: 1em;
 }
 
-h2 {
-    color: green;
-}
 
 button {
     margin-top: 1em;
@@ -253,9 +268,12 @@ button {
 }
 
 .user-item {
-    border: 1px solid gray;
+    border: 1px solid black;
+    background-color: rgba(218, 201, 201, 0.47);
+    border-radius: 10px;
     padding: 1em;
     margin-bottom: 1em;
+    text-align: center;
 }
 
 .delete-button {
