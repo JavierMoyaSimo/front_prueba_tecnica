@@ -59,7 +59,7 @@ const deleteUser = async (email) => {
             headers: { Authorization: `Bearer ${user.value.jwt}` },
         });
 
-        
+
         deletedUserEmail.value = email;
         if (response.data.message === "User successfully deleted") {
 
@@ -193,7 +193,7 @@ let updateCorrectly = ref(false);
     <div v-if="user && user.rol === 'admin'" class="userView-div">
         <div class="border">
             <h2>LISTA DE USUARIOS </h2>
-            <!-- <div v-if="user && user.rol === 'admin'" class="userView-div"> -->
+
 
             <div v-if="allUsers">
                 <div v-for="user in allUsers" :key="user._id" class="user-item" v-if="user.email !== deletedUserEmail">
@@ -217,7 +217,7 @@ let updateCorrectly = ref(false);
             </div>
         </div>
 
-        <!-- </div> -->
+
 
     </div>
 </template>
