@@ -20,7 +20,7 @@ const endpoint = 'http://localhost:3001/modifyuser/';
 const getUsers = 'http://localhost:3001/listusers';
 const deleteUserEndpoint = 'http://localhost:3001/deleteUser/';
 
-onMounted(() => {
+onMounted(async () => {
     const userData = localStorage.getItem('user');
     if (userData) {
         user.value = JSON.parse(userData);
@@ -29,11 +29,17 @@ onMounted(() => {
     }
 
     if (user.value.rol === "admin") {
-        getAllUsers()
-            .then((response) => {
-                allUsers.value = response;
-            })
-            .catch((error) => console.error(error));
+
+        try {
+            allUsers.value = await getAllUsers()
+        } catch (error) {
+            console.error(error);
+        }
+
+        // .then((response) => {
+        //     allUsers.value = response;
+        // })
+        // .catch((error) => console.error(error));
     }
 })
 
